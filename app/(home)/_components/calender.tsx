@@ -12,13 +12,13 @@ export default function Calender() {
     const [selectDate, setSelectDate] = useState(currentDate);
 
     return (
-        <div className="flex gap-10 sm:divide-x justify-center sm:w-1/2 mx-auto h-screen items-center sm:flex-row flex-col">
-            <div className="w-auto">
+        <div className="flex gap-11 sm:divide-x justify-center sm:w-1/2 mx-auto  items-center sm:flex-row flex-col">
+            <div className="">
                 <div className="flex justify-between items-center">
                     <h1 className="select-none font-semibold">
                         {months[today.month()]}, {today.year()}
                     </h1>
-                    <div className="flex gap-10 items-center">
+                    <div className="flex  items-center">
                         <GrFormPrevious
                             className="w-5 h-5 cursor-pointer hover:scale-105 transition-all"
 							onClick={() => {
@@ -41,12 +41,12 @@ export default function Calender() {
                         />
                     </div>
                 </div>
-                <div className="grid grid-cols-7 ">
+                <div className="gap-x-10 grid grid-cols-7 ">
 					{days.map((day, index) => {
 						return (
 							<h1
 								key={index}
-								className="text-sm text-center h-14 w-14 grid place-content-center text-gray-500 select-none"
+								className="text-sm text-center h-14 grid place-content-center text-gray-500 select-none"
 							>
 								{day}
 							</h1>
@@ -54,7 +54,7 @@ export default function Calender() {
 					})}
 				</div>
 
-                <div className=" grid grid-cols-7 ">
+                <div className="gap-x-10  grid grid-cols-7 ">
 					{generateDate(today.month(), today.year()).map(
 						({ date, currentMonth, today }, index) => {
 							return (

@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/providers/auth-provider";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
+import Navbar from "./navbar";
 import Calender from "./calender";
 
 export const Navigation = () => {
@@ -26,25 +27,6 @@ export const Navigation = () => {
     const [ isCollapsed, setIsCollapsed] = useState(isMobile);
 
     const [ user ] = useAuthState(auth);
-    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-
-    const tileContent = ({ date }: { date: Date }) => {
-        if (selectedDate && date.getDate() === selectedDate.getDate()) {
-            return (
-                <div className="relative">
-                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white">
-                        {date.getDate()}
-                    </div>
-                </div>
-            );
-        }
-        return null;
-    };
-
-    const onClickDay = (date: Date) => {
-        console.log('Clicked date:', date);
-        setSelectedDate(date);
-    };
 
     useEffect (() => {
         if (isMobile) {
@@ -75,7 +57,7 @@ export const Navigation = () => {
         if (!isResizingRef.current) return;
         let newWidth = event.clientX;
 
-        if (newWidth < 240) newWidth = 240;
+        if (newWidth < 310) newWidth = 310;
         if (newWidth > 480) newWidth = 480;
 
         if (sidebarRef.current && navbarRef.current) {
@@ -96,14 +78,14 @@ export const Navigation = () => {
           setIsCollapsed(false);
           setIsResetting(true);
     
-          sidebarRef.current.style.width = isMobile ? "100%" : "240px";
+          sidebarRef.current.style.width = isMobile ? "100%" : "310px";
           navbarRef.current.style.setProperty(
             "width",
-            isMobile ? "0" : "calc(100% - 240px)"
+            isMobile ? "0" : "calc(100% - 310px)"
           );
           navbarRef.current.style.setProperty(
             "left",
-            isMobile ? "100%" : "240px"
+            isMobile ? "100%" : "310px"
           );
           setTimeout(() => setIsResetting(false), 300);
         }
@@ -129,7 +111,7 @@ export const Navigation = () => {
         <>
             <aside
                 ref={sidebarRef}
-                className="group/sidebar h-full bg-secondary overflow-y-auto relative flex w-60 flex-col z-[99999]"
+                className="group/sidebar h-full bg-secondary overflow-y-auto relative flex w-70 flex-col z-[99999]"
             >
                 <div
                     role="button"
@@ -149,10 +131,33 @@ export const Navigation = () => {
                         </div>
                         <div>{user?.displayName}</div>
                 </div>
-                <div className="react-calendar bg-white text-gray-800 rounded-lg shadow-md font-sans leading-tight">
-                    <Calender />
+                <div
+                    onMouseDown={handleMouseDown }
+                    onClick={resetWidth}
+                    className="opacity-0 group-hover/sidebar:opacity-100 transtion cursor-ew-resize absolute h-full w-1 bg-primary/10 right-0 top-0"
+                >
                 </div>
+                <Calender />
             </aside>
+            <div 
+                ref={navbarRef}
+                className={cn(
+                    "absolute top-0 z-[99999] left-60 w-[calc(100%-240px)]",
+                    isResetting && "transition-all ease-in-out duration-30",
+                    isMobile && "left-0 w-full"
+                )}
+            >
+                {!!params.documentId ? (
+                    <Navbar
+                        isCollapsed={isCollapsed}
+                        onResetWidth={resetWidth}
+                    />
+                    ) : (
+                        <nav className="bg-transparent px-3 py-2 w-full">
+                            {isCollapsed && <MenuIcon onClick={resetWidth} role="button" className="h-6 w-6 text-muted-foreground" />}
+                        </nav>
+                    )}
+            </div>
         </>
     )
 }
