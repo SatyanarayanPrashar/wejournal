@@ -12,8 +12,8 @@ export default function Calender() {
     const [selectDate, setSelectDate] = useState(currentDate);
 
     return (
-        <div className="flex gap-11 sm:divide-x justify-center sm:w-1/2 mx-auto  items-center sm:flex-row flex-col">
-            <div className="">
+        <div className="flex gap-11 sm:divide-x justify-center sm:w-1 mx-auto  items-center sm:flex-row flex-col">
+            <div className="mt-10">
                 <div className="flex justify-between items-center">
                     <h1 className="select-none font-semibold">
                         {months[today.month()]}, {today.year()}
@@ -26,7 +26,7 @@ export default function Calender() {
 							}}
                         />
                         <h1
-							className=" cursor-pointer hover:scale-105 transition-all"
+							className="cursor-pointer hover:scale-105 transition-all"
 							onClick={() => {
 								setToday(currentDate);
 							}}

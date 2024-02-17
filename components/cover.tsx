@@ -31,6 +31,7 @@ export const Cover = ({ url, preview }: CoverImageProps) => {
         {!!url && (
             <Image
                 src={url}
+                // src="./temp.png"
                 fill
                 alt="Cover"
                 className="object-cover"
