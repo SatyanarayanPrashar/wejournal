@@ -4,12 +4,19 @@ import { useState } from "react";
 import { generateDate, months } from "@/lib/calender";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import { cn } from "@/lib/utils";
+import router from "next/router";
 
 export default function Calender() {
     const days =["S", "M", "T", "W", "T", "F", "S"];
     const currentDate = dayjs();
     const [today, setToday] = useState(currentDate);
     const [selectDate, setSelectDate] = useState(currentDate);
+
+	const onSelect = () => {
+		console.log("clicked");
+        router.push(`/home/${selectDate}`)
+		console.log("Moved");
+	}
 
     return (
         <div className="flex gap-11 sm:divide-x justify-center sm:w-1 mx-auto  items-center sm:flex-row flex-col">
@@ -77,6 +84,7 @@ export default function Calender() {
 											"h-10 w-10 rounded-full grid place-content-center hover:bg-black hover:text-white transition-all cursor-pointer select-none"
 										)}
 										onClick={() => {
+											onSelect;
 											setSelectDate(date);
 										}}
 									>

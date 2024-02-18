@@ -9,14 +9,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
-
 interface CoverImageProps {
     url?: string;
     preview?: boolean;
 }
 
 export const Cover = ({ url, preview }: CoverImageProps) => {
-   
 
     const onRemove = async () => {
         
@@ -31,7 +29,6 @@ export const Cover = ({ url, preview }: CoverImageProps) => {
         {!!url && (
             <Image
                 src={url}
-                // src="./temp.png"
                 fill
                 alt="Cover"
                 className="object-cover"

@@ -5,15 +5,37 @@ import { Navigation } from "./_components/navigation";
 
 import { auth } from "@/providers/auth-provider";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { useEffect, useState } from "react";
+import { Spinner } from "@/components/spinner";
 
 const MainLayout = ({
     children
 }: {
     children: React.ReactNode;
 }) => {
-    const [ user ] = useAuthState(auth);
+    const [isLoading, setIsLoading] = useState(true);
+    const [user] = useAuthState(auth);
 
-    if(!user) {
+    useEffect(() => {
+        const fetchUser = async () => {
+            setIsLoading(true);
+            if (user) {
+                setIsLoading(false);
+            }
+        };
+
+        fetchUser();
+    }, [user]);
+
+    if (isLoading) {
+        return (
+            <div className="h-full flex items-center justify-center">
+                <Spinner size="lg" />
+            </div>
+        );
+    }
+
+    if (!user) {
         return redirect("/");
     }
 

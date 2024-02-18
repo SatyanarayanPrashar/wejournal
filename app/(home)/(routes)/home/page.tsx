@@ -3,30 +3,116 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/providers/auth-provider";
-import { SetStateAction, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { Cover } from "@/components/cover";
-import Editor from "@/components/editor";
+import { db } from "@/app/firebase/config";
+import { collection, addDoc, doc, setDoc, getDoc, getFirestore, DocumentData } from "firebase/firestore";
+import { Spinner } from "@/components/spinner";
 
 const HomePage = () => {
-    const [ user ] = useAuthState(auth);
-    const [ isMember ] = useState(true);
-
+    const [user] = useAuthState(auth);
+    const [isMember, setIsMember] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [journalCode, setJournalCode] = useState('');
+    const [journalInfo, setJournalInfo] = useState<null | DocumentData>(null);
     const router = useRouter();
-    const [ journalCode, setJournalCode ] = useState('');
 
-    const onCreate = () => {
-        
+    useEffect(() => {
+        const checkMembership = async () => {
+            try {
+                const db = getFirestore();
+                const userDocRef = doc(collection(db, 'users'), user?.uid);
+                const userDocSnapshot = await getDoc(userDocRef);
+
+                if (userDocSnapshot.exists()) {
+                    const userData = userDocSnapshot.data();
+                    if (userData && userData.journalId) {
+                        setIsMember(true);
+                        // Fetch journal info if user is a member
+                        await fetchJournalInfo(userData.journalId);
+                    }
+                }
+            } catch (error) {
+                console.error('Error checking membership:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        if (user) {
+            checkMembership();
+        }
+    }, [user]);
+
+    const fetchJournalInfo = async (journalId: string) => {
+        try {
+            const db = getFirestore();
+            const journalDocRef = doc(collection(db, 'journals'), journalId);
+            const journalDocSnapshot = await getDoc(journalDocRef);
+
+            if (journalDocSnapshot.exists()) {
+                const journalData = journalDocSnapshot.data();
+                setJournalInfo(journalData);
+            }
+        } catch (error) {
+            console.error('Error fetching journal info:', error);
+        }
     };
+    
+    function generateCode() {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; // You can customize this if you want to include digits or special characters
+        let code = '';
+        for (let i = 0; i < 4; i++) {
+            const randomIndex = Math.floor(Math.random() * characters.length);
+            code += characters[randomIndex];
+        }
+        return code;
+    }
+    
+    const onCreate = async () => {
+        const code = generateCode();
+        const journalCollectionRef = collection(db, "journals");
+        const journalDocRef = doc(journalCollectionRef, code);
+        await setDoc(journalDocRef, {
+            userid1: user?.uid,
+            userid2: "",
+            title: `${user?.displayName}'s WeJournal`,
+            cover: "",
+            about: "Write about your Journal here."
+        });
+    
+        const usersCollectionRef = collection(db, "users");
+        const userDocRef = doc(usersCollectionRef, user?.uid);
+        await setDoc(userDocRef, {
+            journalId: code,
+            userid: user?.uid,
+        });
+        window.location.reload();
+    };
+    
+
     const onJoin = () => {
         
     }
     const handleJournalCodeChange = (event: { target: { value: SetStateAction<string>; }; }) => {
         setJournalCode(event.target.value);
     };
+
+    if(isLoading) {
+        return ( 
+            <div className="h-full flex items-center justify-center">
+                <Spinner size="lg"/>
+            </div>
+        )
+    }
+
+    if(!user) {
+        return redirect("/");
+    }
 
     return (
         <>
@@ -49,7 +135,13 @@ const HomePage = () => {
                 <h2 className="text-lg font-medium">
                     Welcome {user?.displayName}
                 </h2>
-                <Button onClick={onCreate}>
+                <Button onClick={
+                    () => {
+                        console.log("step1");
+                        onCreate();
+                        console.log("step4");
+                    }
+                }>
                     <PlusCircle className="h-4 w-4 mr-2" />
                     Create your WeJournal
                 </Button>
@@ -71,16 +163,16 @@ const HomePage = () => {
             )}
             {isMember && (
                 <>
-                    <Cover url="/temp.jpg"/>
+                    <Cover url={journalInfo?.cover != "" ? journalInfo?.cover : "/temp.jpg"}/>
                     <div className="m-20">
                         <h1 className="text-5xl font-bold h-14 grid text-gray">
-                            Yaha pe title of Journal
+                            {journalInfo?.title}
                         </h1>
                         <h1 className="text-xl h-14 grid text-gray">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas ducimus, odio eius quidem sed fugit nam culpa fuga enim, omnis voluptatibus optio eos repudiandae dolor impedit quis facere esse, veniam quibusdam ex. Illo nisi esse modi inventore odio magnam id enim neque, temporibus perferendis beatae molestias veniam iure in illum sed voluptates ut? Esse vero quod itaque pariatur, doloremque tempora vel expedita voluptatem veniam rem, distinctio accusamus consectetur magnam. Ducimus.
+                        {journalInfo?.about}
                         </h1>
                     </div>
-               </> 
+               </>
             )}
         </>
     )
