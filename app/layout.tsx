@@ -1,5 +1,6 @@
 import { Inter } from 'next/font/google'
 import type { Metadata } from 'next'
+import { EdgeStoreProvider } from "@/lib/edgestore";
 
 import './globals.css'
 
@@ -32,7 +33,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
+        <EdgeStoreProvider>
               {children}
+        </EdgeStoreProvider>
       </body>
     </html>
   )

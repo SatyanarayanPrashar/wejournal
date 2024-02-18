@@ -3,23 +3,27 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
-import { redirect, useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
+import dynamic from "next/dynamic";
 
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/providers/auth-provider";
-import { SetStateAction, useEffect, useState } from "react";
+import { SetStateAction, useEffect, useMemo, useState } from "react";
 import { Cover } from "@/components/cover";
 import { db } from "@/app/firebase/config";
-import { collection, addDoc, doc, setDoc, getDoc, getFirestore, DocumentData } from "firebase/firestore";
+import { collection, addDoc, doc, setDoc, getDoc, getFirestore, DocumentData, updateDoc } from "firebase/firestore";
 import { Spinner } from "@/components/spinner";
 
+// import { Toolbar } from "@/components/toolbar";
+
 const HomePage = () => {
+    const Editor = useMemo(() => dynamic(() => import("../../_components/editor"), { ssr: false }), [])
+
     const [user] = useAuthState(auth);
     const [isMember, setIsMember] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [journalCode, setJournalCode] = useState('');
     const [journalInfo, setJournalInfo] = useState<null | DocumentData>(null);
-    const router = useRouter();
 
     useEffect(() => {
         const checkMembership = async () => {
@@ -66,7 +70,7 @@ const HomePage = () => {
     function generateCode() {
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; // You can customize this if you want to include digits or special characters
         let code = '';
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 5; i++) {
             const randomIndex = Math.floor(Math.random() * characters.length);
             code += characters[randomIndex];
         }
@@ -78,11 +82,11 @@ const HomePage = () => {
         const journalCollectionRef = collection(db, "journals");
         const journalDocRef = doc(journalCollectionRef, code);
         await setDoc(journalDocRef, {
+            uid: code,
             userid1: user?.uid,
             userid2: "",
-            title: `${user?.displayName}'s WeJournal`,
             cover: "",
-            about: "Write about your Journal here."
+            about: ""
         });
     
         const usersCollectionRef = collection(db, "users");
@@ -98,6 +102,19 @@ const HomePage = () => {
     const onJoin = () => {
         
     }
+ 
+    const onUpdate = async (uid: string | undefined, newAbout: string) => {
+        try {
+            const journalDocRef = doc(collection(db, "journals"), uid);
+            await updateDoc(journalDocRef, {
+                about: newAbout
+            });
+            console.log("Document updated successfully.");
+        } catch (error) {
+            console.error("Error updating document:", error);
+        }
+    };
+
     const handleJournalCodeChange = (event: { target: { value: SetStateAction<string>; }; }) => {
         setJournalCode(event.target.value);
     };
@@ -137,9 +154,7 @@ const HomePage = () => {
                 </h2>
                 <Button onClick={
                     () => {
-                        console.log("step1");
                         onCreate();
-                        console.log("step4");
                     }
                 }>
                     <PlusCircle className="h-4 w-4 mr-2" />
@@ -164,13 +179,13 @@ const HomePage = () => {
             {isMember && (
                 <>
                     <Cover url={journalInfo?.cover != "" ? journalInfo?.cover : "/temp.jpg"}/>
-                    <div className="m-20">
-                        <h1 className="text-5xl font-bold h-14 grid text-gray">
-                            {journalInfo?.title}
-                        </h1>
-                        <h1 className="text-xl h-14 grid text-gray">
-                        {journalInfo?.about}
-                        </h1>
+                    <div className="md:max-w-3xl lg:max-w-4xl m-10">
+                        {/* <Toolbar initialData={document} /> */}
+                        <Editor
+                            onChange={ () => {} }
+                            initialContent={journalInfo?.about}
+                            journalUid= {journalInfo?.uid}
+                        />
                     </div>
                </>
             )}

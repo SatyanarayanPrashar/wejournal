@@ -8,6 +8,7 @@ import { useParams } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { useEdgeStore } from "@/lib/edgestore";
 
 interface CoverImageProps {
     url?: string;
@@ -15,9 +16,18 @@ interface CoverImageProps {
 }
 
 export const Cover = ({ url, preview }: CoverImageProps) => {
+    const { edgestore } = useEdgeStore();
+    const params = useParams();
 
     const onRemove = async () => {
-        
+        // if (url) {
+        // await edgestore.publicFiles.delete({
+        //     url: url
+        // })
+        // }
+        // removeCoverImage({
+        //     id: params.documentId as Id<"documents">
+        // });
     };
 
     return (
