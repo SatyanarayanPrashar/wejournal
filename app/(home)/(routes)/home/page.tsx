@@ -15,7 +15,6 @@ import { db } from "@/app/firebase/config";
 import { collection, doc, setDoc, updateDoc } from "firebase/firestore";
 import { Spinner } from "@/components/spinner";
 
-import { Toolbar } from "@/components/toolbar";
 
 const HomePage = () => {
     const Editor = useMemo(() => dynamic(() => import("../../_components/editor"), { ssr: false }), [])
@@ -23,7 +22,6 @@ const HomePage = () => {
     const [user] = useAuthState(auth);
     const [journalCode, setJournalCode] = useState('');
     const { journalInfo, isMember, isLoading } = useJournalInfo();
-
     
     function generateCode() {
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789';

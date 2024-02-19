@@ -1,7 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils";
-import { ChevronsLeft, MenuIcon, Plus, PlusCircle, Search, Settings, Trash } from "lucide-react"
+import { ChevronsLeft, MenuIcon  } from "lucide-react"
 import { useParams, usePathname } from "next/navigation";
 import { ElementRef, useEffect, useRef, useState } from "react";
 
@@ -13,6 +13,7 @@ import { auth } from "@/providers/auth-provider";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import Navbar from "./navbar";
 import Calender from "./calender";
+import CoverBttn from "./coverbttn";
 
 export const Navigation = () => {
     const router = useRouter();
@@ -103,10 +104,6 @@ export const Navigation = () => {
         }
       }
     
-      const handleCreate = () => {
-        
-      };
-
     return (
         <>
             <aside
@@ -123,14 +120,17 @@ export const Navigation = () => {
                 >
                     <ChevronsLeft className="h-6 w-6"/>
                 </div>
-                    <div className="flex items-center">
-                        <div className="rounded-full m-4 flex overflow-hidden h-8 w-8">
-                            <Avatar>
-                                <AvatarImage src={user?.photoURL ? user.photoURL : "/reading.png"} />
-                            </Avatar>
-                        </div>
-                        <div>{user?.displayName}</div>
+                <div className="flex items-center">
+                    <div className="rounded-full m-4 flex overflow-hidden h-8 w-8">
+                        <Avatar>
+                            <AvatarImage src={user?.photoURL ? user.photoURL : "/reading.png"} />
+                        </Avatar>
+                    </div>
+                <div>{user?.displayName}</div>
                 </div>
+                
+                <CoverBttn />
+
                 <div
                     onMouseDown={handleMouseDown }
                     onClick={resetWidth}

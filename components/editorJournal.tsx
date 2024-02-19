@@ -58,8 +58,8 @@ const EditorJournal: React.FC<EditorProps> = ({ onChange, initialContent, editab
   })
 
   return (
-    <div>
-      <BlockNoteView
+    <div className='z-[999999]'>
+      <BlockNoteView className='z-[999999]'
         editor={editor}
         theme="light"
       />
