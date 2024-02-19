@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import dynamic from "next/dynamic";
 
 import { useAuthState } from "react-firebase-hooks/auth";
+import useJournalInfo from "@/hooks/active-journal-info";
 import { auth } from "@/providers/auth-provider";
 import { SetStateAction, useEffect, useMemo, useState } from "react";
 import { Cover } from "@/components/cover";
@@ -20,52 +21,9 @@ const HomePage = () => {
     const Editor = useMemo(() => dynamic(() => import("../../_components/editor"), { ssr: false }), [])
 
     const [user] = useAuthState(auth);
-    const [isMember, setIsMember] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
     const [journalCode, setJournalCode] = useState('');
-    const [journalInfo, setJournalInfo] = useState<null | DocumentData>(null);
+    const { journalInfo, isMember, isLoading } = useJournalInfo();
 
-    useEffect(() => {
-        const checkMembership = async () => {
-            try {
-                const db = getFirestore();
-                const userDocRef = doc(collection(db, 'users'), user?.uid);
-                const userDocSnapshot = await getDoc(userDocRef);
-
-                if (userDocSnapshot.exists()) {
-                    const userData = userDocSnapshot.data();
-                    if (userData && userData.journalId) {
-                        setIsMember(true);
-                        // Fetch journal info if user is a member
-                        await fetchJournalInfo(userData.journalId);
-                    }
-                }
-            } catch (error) {
-                console.error('Error checking membership:', error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        if (user) {
-            checkMembership();
-        }
-    }, [user]);
-
-    const fetchJournalInfo = async (journalId: string) => {
-        try {
-            const db = getFirestore();
-            const journalDocRef = doc(collection(db, 'journals'), journalId);
-            const journalDocSnapshot = await getDoc(journalDocRef);
-
-            if (journalDocSnapshot.exists()) {
-                const journalData = journalDocSnapshot.data();
-                setJournalInfo(journalData);
-            }
-        } catch (error) {
-            console.error('Error fetching journal info:', error);
-        }
-    };
     
     function generateCode() {
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; // You can customize this if you want to include digits or special characters
@@ -117,18 +75,6 @@ const HomePage = () => {
         });
         window.location.reload();
     }
- 
-    // const onUpdate = async (uid: string | undefined, newAbout: string) => {
-    //     try {
-    //         const journalDocRef = doc(collection(db, "journals"), uid);
-    //         await updateDoc(journalDocRef, {
-    //             about: newAbout
-    //         });
-    //         console.log("Document updated successfully.");
-    //     } catch (error) {
-    //         console.error("Error updating document:", error);
-    //     }
-    // };
 
     const handleJournalCodeChange = (event: { target: { value: SetStateAction<string>; }; }) => {
         setJournalCode(event.target.value);

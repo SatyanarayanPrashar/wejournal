@@ -43,6 +43,7 @@ const Editor: React.FC<EditorProps> = ({ initialContent, editable, journalUid }:
   type BSchema = {};
   type I = {};
   type S = {};
+  
 
   const editor: BlockNoteEditor = useBlockNote({
     editable,
