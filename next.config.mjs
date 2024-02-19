@@ -1,7 +1,4 @@
-const nextConfig = {
-    images: {
-      domains: ['*'],
-    },
-  };
-  
-  export default nextConfig;
+// next.config.js
+export const images = {
+  domains: ['files.edgestore.dev'],
+};

@@ -1,6 +1,7 @@
 import { Inter } from 'next/font/google'
 import type { Metadata } from 'next'
 import { EdgeStoreProvider } from "@/lib/edgestore";
+import { ModalProvider } from '@/providers/modal-provider';
 
 import './globals.css'
 
@@ -35,6 +36,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <EdgeStoreProvider>
               {children}
+              <ModalProvider />
         </EdgeStoreProvider>
       </body>
     </html>

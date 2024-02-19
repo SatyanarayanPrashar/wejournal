@@ -63,7 +63,7 @@ const EditorJournal: React.FC<EditorProps> = ({ onChange, initialContent, editab
         editor={editor}
         theme="light"
       />
-      <Button onClick={handleDoneClick} className='m-10' variant="ghost">
+      <Button onClick={handleDoneClick} className='pl-[54px]' variant="ghost">
         <Check className="h-4 w-4 mr-2" />
         Save
       </Button>

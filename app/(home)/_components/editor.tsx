@@ -63,7 +63,7 @@ const Editor: React.FC<EditorProps> = ({ initialContent, editable, journalUid }:
         editor={editor}
         theme="light"
       />
-      <Button onClick={handleDoneClick} className='ml-10 hover:bg-slate-400 border' variant="ghost">
+      <Button onClick={handleDoneClick} className='ml-[54px] hover:bg-slate-400 border' variant="ghost">
         <Check className="h-4 w-4 mr-2" />
         Save
       </Button>

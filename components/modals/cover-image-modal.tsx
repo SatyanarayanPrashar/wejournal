@@ -1,22 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { useParams } from "next/navigation";
-
 import { Dialog, DialogContent,DialogHeader } from "@/components/ui/dialog";
 import { useCoverImage } from "@/hooks/use-cover-image";
 import { SingleImageDropzone } from "@/components/single-image-dropzone";
 import { useEdgeStore } from "@/lib/edgestore";
 import { db } from "@/app/firebase/config";
 import { doc, collection, updateDoc } from "firebase/firestore";
+import useJournalInfo from "@/hooks/active-journal-info";
 
-interface CoverImageProps {
-    journalUid?: string;
-}
-
-export const CoverImageModal = ({ journalUid }: CoverImageProps) => {
-  const params = useParams();
+export const CoverImageModal = () => {
   const coverImage = useCoverImage();
+
+  const { journalInfo } = useJournalInfo();
   const { edgestore } = useEdgeStore();
   
   const [file, setFile] = useState<File>();
@@ -41,7 +37,7 @@ export const CoverImageModal = ({ journalUid }: CoverImageProps) => {
         });
 
         try {
-            const journalDocRef = doc(collection(db, "journals"), journalUid);
+            const journalDocRef = doc(collection(db, "journals"), journalInfo?.uid);
             await updateDoc(journalDocRef, { cover: res.url });
             } catch (error) {
                 console.error("Error updating document:", error);
@@ -49,6 +45,7 @@ export const CoverImageModal = ({ journalUid }: CoverImageProps) => {
 
         onClose();
     }
+    window.location.reload();
   }
 
   return (
@@ -56,7 +53,7 @@ export const CoverImageModal = ({ journalUid }: CoverImageProps) => {
       <DialogContent>
         <DialogHeader>
           <h2 className="text-center text-lg font-semibold">
-            Cover Image
+            TODO: Cover Image
           </h2>
         </DialogHeader>
         <SingleImageDropzone
