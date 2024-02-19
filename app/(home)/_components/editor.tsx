@@ -9,13 +9,12 @@ import { Button } from '@/components/ui/button';
 import { Check } from 'lucide-react';
 
 interface EditorProps {
-  onChange: (value: string) => void;
   initialContent?: string;
   editable?: boolean;
   journalUid?: string;
 };
 
-const Editor: React.FC<EditorProps> = ({ onChange, initialContent, editable, journalUid }: EditorProps) => {
+const Editor: React.FC<EditorProps> = ({ initialContent, editable, journalUid }: EditorProps) => {
   const { edgestore } = useEdgeStore();
   const [updatedContent, setUpdatedContent] = useState(initialContent);
 

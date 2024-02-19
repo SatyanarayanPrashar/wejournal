@@ -97,23 +97,38 @@ const HomePage = () => {
         });
         window.location.reload();
     };
-    
 
-    const onJoin = () => {
-        
+    const setJoincode = (event: { target: { value: SetStateAction<string>; }; }) => {
+        setJournalCode(event.target.value);
+    }
+    
+    const onJoin = async () => {
+        const code = journalCode;
+        const journalCollectionRef = collection(db, "journals");
+        const journalDocRef = doc(journalCollectionRef, code);
+        await updateDoc(journalDocRef, {
+            userid2: user?.uid,
+        });
+        const usersCollectionRef = collection(db, "users");
+        const userDocRef = doc(usersCollectionRef, user?.uid);
+        await setDoc(userDocRef, {
+            journalId: code,
+            userid: user?.uid,
+        });
+        window.location.reload();
     }
  
-    const onUpdate = async (uid: string | undefined, newAbout: string) => {
-        try {
-            const journalDocRef = doc(collection(db, "journals"), uid);
-            await updateDoc(journalDocRef, {
-                about: newAbout
-            });
-            console.log("Document updated successfully.");
-        } catch (error) {
-            console.error("Error updating document:", error);
-        }
-    };
+    // const onUpdate = async (uid: string | undefined, newAbout: string) => {
+    //     try {
+    //         const journalDocRef = doc(collection(db, "journals"), uid);
+    //         await updateDoc(journalDocRef, {
+    //             about: newAbout
+    //         });
+    //         console.log("Document updated successfully.");
+    //     } catch (error) {
+    //         console.error("Error updating document:", error);
+    //     }
+    // };
 
     const handleJournalCodeChange = (event: { target: { value: SetStateAction<string>; }; }) => {
         setJournalCode(event.target.value);
@@ -152,11 +167,7 @@ const HomePage = () => {
                 <h2 className="text-lg font-medium">
                     Welcome {user?.displayName}
                 </h2>
-                <Button onClick={
-                    () => {
-                        onCreate();
-                    }
-                }>
+                <Button onClick={ () => {onCreate();} }>
                     <PlusCircle className="h-4 w-4 mr-2" />
                     Create your WeJournal
                 </Button>
@@ -182,7 +193,6 @@ const HomePage = () => {
                     <div className="md:max-w-3xl lg:max-w-4xl m-10">
                         {/* <Toolbar initialData={document} /> */}
                         <Editor
-                            onChange={ () => {} }
                             initialContent={journalInfo?.about}
                             journalUid= {journalInfo?.uid}
                         />
