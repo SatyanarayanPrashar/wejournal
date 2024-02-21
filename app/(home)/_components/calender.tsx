@@ -7,7 +7,6 @@ import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import { cn } from "@/lib/utils";
 
 import { useRouter } from "next/navigation";
-// import { useRouter } from 'next/router';
 
 import { db } from "@/app/firebase/config";
 import { collection, doc, getDoc, setDoc } from "firebase/firestore";
@@ -106,7 +105,6 @@ export default function Calender() {
 				await setDoc(todayDocRef, {
 					content1: "",
 					content2: "",
-					cover: "",
 					entrydate: dateString,
 				});
 				router.push(`/home/${dateString}`);
@@ -133,7 +131,6 @@ export default function Calender() {
 					await setDoc(todayDocRef, {
 						content1: "",
 						content2: "",
-						cover: "",
 						entrydate: dateString,
 					});
 					router.push(`/home/${dateString}`);

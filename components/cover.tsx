@@ -1,12 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { X } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import { Toolbar } from "@/components/toolbar";
-
 
 interface CoverImageProps {
     url?: string;
@@ -32,7 +29,6 @@ export const Cover = ({ url, preview }: CoverImageProps) => {
         {url && !preview && (
             <div className="opacity-30 group-hover:opacity-100 absolute bottom-5 right-5 flex items-center gap-x-2">
                 <Toolbar />
-                
             </div>
         )}
         </div>

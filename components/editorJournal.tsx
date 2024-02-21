@@ -7,6 +7,7 @@ import { collection, doc, updateDoc } from "firebase/firestore";
 import { db } from "@/app/firebase/config";
 import { Button } from './ui/button';
 import { Check } from 'lucide-react';
+import useJournalInfo from '@/hooks/active-journal-info';
 
 interface EditorProps {
   userRole?: string;
@@ -19,16 +20,28 @@ interface EditorProps {
 const EditorJournal: React.FC<EditorProps> = ({ userRole, initialContent, editable, journalUid, dateString }: EditorProps) => {
   const { edgestore } = useEdgeStore();
   const [updatedContent, setUpdatedContent] = useState(initialContent);
+	const { journalInfo } = useJournalInfo();
+
 
   const handleUpload = async (file: File) => {
     const response = await edgestore.publicFiles.upload({ file });
     return response.url;
   }
-
+ 
   const onUpdate = async (uid: string | undefined, newContent: string) => {
+    const journalCollectionRef = collection(db, "journals", journalInfo?.uid ? journalInfo?.uid : "unknown", "journal");
+    const todayDocRef = doc(journalCollectionRef, dateString);
     try {
-      const journalDocRef = doc(collection(db, "journals"), uid);
-      await updateDoc(journalDocRef, { about: newContent });
+      if(userRole == "content1"){
+        await updateDoc(todayDocRef, { "content1" : newContent });
+        console.log(userRole);
+      }
+      else if(userRole == "content2"){
+        await updateDoc(todayDocRef, { "content2" : newContent });
+        console.log(userRole);
+      } else{
+        return;
+      }
     } catch (error) {
       console.error("Error updating document:", error);
     }
