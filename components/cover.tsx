@@ -17,7 +17,7 @@ export const Cover = ({ url, preview }: CoverImageProps) => {
 
     return (
         <div className={cn(
-            "relative w-full h-[35vh] group",
+            "relative w-auto h-[35vh] group m-[20px]",
             !url && "h-[12vh]",
             url && "bg-muted"
         )}>
@@ -26,7 +26,7 @@ export const Cover = ({ url, preview }: CoverImageProps) => {
                 src={url}
                 fill
                 alt="Cover"
-                className="object-cover"
+                className="object-cover rounded-lg"
             />
         )}
         {url && !preview && (

@@ -109,12 +109,10 @@ export default function Calender() {
 					cover: "",
 					entrydate: dateString,
 				});
+				router.push(`/home/${dateString}`);
 			}
 		} catch (error) {
 			console.error("Error creating or navigating to document:", error);
-		}
-		const navigatekrlo = (dateString: string) => {
-			 router.push(`/home/${dateString}`);
 		}
 	}
 
@@ -149,20 +147,27 @@ export default function Calender() {
 	}
 
     return (
-		<div className="flex gap-11 sm:divide-x justify-center sm:w-1 mx-auto  items-center sm:flex-row flex-col">
-            <div className="mt-10">
+		<div className="flex gap-11 sm:divide-x justify-center sm:w-1 mx-auto items-center sm:flex-row flex-col">
+            <div className="mt-4">
                 <div className="flex justify-between items-center">
-                    <h1 className="select-none font-semibold">
-                        {months[today.month()]}, {today.year()}
+                    <GrFormPrevious
+                        className="w-5 h-5 cursor-pointer hover:scale-105 transition-all ml-[-20px]"
+						onClick={() => {
+							console.log("trigger1");
+							setToday(today.month(today.month() - 1));
+						}}
+					/>
+                    <h1 className="select-none font-semibold ml-[-20px]">
+						{months[today.month()].substring(0, 3)}, {today.year()}
                     </h1>
+					<GrFormNext
+						className="w-5 h-5 cursor-pointer hover:scale-105 transition-all ml-[-20px]"
+						onClick={() => {
+							console.log("trigger3");
+							setToday(today.month(today.month() + 1));
+						}}
+					/>
                     <div className="flex  items-center">
-                        <GrFormPrevious
-                            className="w-5 h-5 cursor-pointer hover:scale-105 transition-all"
-							onClick={() => {
-								console.log("trigger1");
-								setToday(today.month(today.month() - 1));
-							}}
-							/>
                         <h1
 							className="cursor-pointer hover:scale-105 transition-all"
 							onClick={() => {
@@ -171,15 +176,8 @@ export default function Calender() {
 								OpenToday();
 							}}
 						>
-							Today
+							Open Today
 						</h1>
-                        <GrFormNext
-                            className="w-5 h-5 cursor-pointer hover:scale-105 transition-all"
-							onClick={() => {
-								console.log("trigger3");
-								setToday(today.month(today.month() + 1));
-							}}
-                        />
                     </div>
                 </div>
                 <div className="gap-x-10 grid grid-cols-7 ">

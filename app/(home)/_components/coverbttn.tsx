@@ -9,19 +9,23 @@ export const coverBttn = () => {
 	const router = useRouter();
 
     return (
-        <div className="flex">
-            <Button
-                onClick={ ()=>{
-					router.push(`/home`);
-                } }
-                className='w-full ml-[11px] mr-[11px] hover:bg-slate-400 border justify-start'
-                variant="ghost"
-            >
-                <Image className="h-4 w-4 mr-2" />
-                Cover
-            </Button>
-        </div>
-        
+        <>
+            <div className="flex items-center justify-center">
+                <div className="ml-[11px]" >
+                    {journalInfo?.uid}
+                </div>
+                <Button
+                    onClick={ ()=>{
+                        router.push(`/home`);
+                    } }
+                    className='w-full ml-[11px] mr-[11px] hover:bg-slate-400 border justify-start'
+                    variant="ghost"
+                    >
+                    <Image className="h-4 w-4 mr-2" />
+                    Cover
+                </Button>
+            </div>
+        </>
     );
 }
 
