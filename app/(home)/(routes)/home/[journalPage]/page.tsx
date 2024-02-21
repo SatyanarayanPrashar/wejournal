@@ -1,7 +1,6 @@
 "use client";
 
 import useCurrentOpenJournal from "@/hooks/current-journal-info";
-import { Spinner } from "@/components/spinner";
 import EditorJournal from "@/components/editorJournal";
 import useJournalInfo from "@/hooks/active-journal-info";
 import { Cover } from "@/components/cover";

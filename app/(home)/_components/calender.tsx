@@ -201,13 +201,13 @@ export default function Calender() {
 									<h1
 										className={cn(
 											currentMonth ? "" : "text-gray-400",
-											today
-												? "bg-red-600 text-white"
-												: "",
+											// today
+											// 	? "bg-blue-400 text-white"
+											// 	: "",
 											selectDate.toDate().toDateString() === date.toDate().toDateString()
-												? "bg-black text-white"
+												? "bg-violet-400 text-white"
 												: "",
-											"h-10 w-10 rounded-full grid place-content-center hover:bg-black hover:text-white transition-all cursor-pointer select-none"
+											"h-10 w-10 rounded-full grid place-content-center hover:bg-gray-400 hover:text-white transition-all cursor-pointer select-none"
 										)}
 										onClick={ () => {
 											handleDateSelect(date);

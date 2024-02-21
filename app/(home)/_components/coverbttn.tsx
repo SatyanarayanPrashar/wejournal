@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Image } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-export const coverBttn = () => {
+export const CoverBttn = () => {
     const { journalInfo } = useJournalInfo();
 	const router = useRouter();
 
@@ -29,4 +29,4 @@ export const coverBttn = () => {
     );
 }
 
-export default coverBttn;
+export default CoverBttn;
