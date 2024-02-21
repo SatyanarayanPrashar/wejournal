@@ -9,8 +9,8 @@ type JournalInfo = {
     title: string;
     about: string;
     cover: string;
-    userid1: string;
-    userid2: string;
+    mUser: string;
+    sUser: string;
 };
 
 const useJournalInfo = () => {

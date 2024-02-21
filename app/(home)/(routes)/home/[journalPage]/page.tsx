@@ -1,57 +1,66 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, firebaseConfig } from "@/providers/auth-provider";
-import { SetStateAction, useState } from "react";
-import { Cover } from "@/components/cover";
-import { createUser } from "@/app/firebase/firebase-user-crud";
+import { auth } from "@/providers/auth-provider";
+import useCurrentOpenJournal from "@/hooks/current-journal-info";
+import { Spinner } from "@/components/spinner";
+import EditorJournal from "@/components/editorJournal";
+import useJournalInfo from "@/hooks/active-journal-info";
 
-interface JournalProps{
-    title?: string;
-    contentuser1?: string;
-    contentuser2?: string;
+export type SearchParamProps = {
+    params: { journalPage: string }
+    // searchParams: { [key: string]: string | string[] | undefined }
 }
 
-const JournalPage = ({ title, contentuser1, contentuser2}: JournalProps) => {
+const JournalPage = ({params: {journalPage} }: SearchParamProps ) => {
     const [ user ] = useAuthState(auth);
-    const [ isMember ] = useState(true);
+    const { journalInfo } = useJournalInfo();
 
-    const router = useRouter();
-    const [ journalCode, setJournalCode ] = useState('');
+    console.log(journalPage);
 
-    const onCreate = () => {
-        createUser
-    };
-    const onJoin = () => {
-        
+    const { currentJournal, isLoading } = useCurrentOpenJournal(journalPage);
+
+    if(isLoading) {
+        return ( 
+            <div className="h-full flex items-center justify-center">
+                <Spinner size="lg"/>
+            </div>
+        )
     }
-    const handleJournalCodeChange = (event: { target: { value: SetStateAction<string>; }; }) => {
-        setJournalCode(event.target.value);
-    };
 
-    return (
-        <>
-            {isMember && (
-                <>
-                    <Cover url="/temp.jpg"/>
-                    <div className="m-20">
-                        <h1 className="text-5xl font-bold h-14 grid text-gray">
-                            {title}
-                        </h1>
-                        <div className="flex gap-10">
-                            <h1 className="text-xl h-14 grid text-gray">
-                                contentuser1
-                            </h1>
-                            <h1 className="text-xl h-14 grid text-gray">
-                                contentuser1
-                            </h1>
-                        </div>
+    if(currentJournal) {
+        return (
+            <>
+                <h2 className="font-bold text-4xl ml-20 mt-20">
+                    {currentJournal?.entrydate}
+                </h2>
+                <div className="flex gap-12  m-10">
+                     <div className="flex-1">
+                        <EditorJournal
+                            initialContent={currentJournal?.content1}
+                            journalUid={journalInfo?.uid}
+                            dateString="20-02-2024"
+                            userRole="content1"
+                            />
                     </div>
-               </>
-            )}
-        </>
-    )
+                    <div className="flex-1">
+                        <EditorJournal
+                            initialContent={currentJournal?.content2}
+                            journalUid={journalInfo?.uid}
+                            dateString="20-02-2024"
+                            userRole="content2"
+                        />
+                    </div>
+                </div>    
+            </>
+        );
+    } else {
+        return (
+            <div>
+                No data found
+            </div>
+        )
+    }
 }
 
 export default JournalPage;

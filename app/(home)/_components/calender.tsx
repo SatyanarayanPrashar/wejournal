@@ -1,16 +1,17 @@
 "use client"
 
 import dayjs from "dayjs";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { generateDate, months } from "@/lib/calender";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import { cn } from "@/lib/utils";
 
 import { useRouter } from "next/navigation";
+// import { useRouter } from 'next/router';
+
 import { db } from "@/app/firebase/config";
 import { collection, doc, getDoc, setDoc } from "firebase/firestore";
 import useJournalInfo from "@/hooks/active-journal-info";
-
 
 export default function Calender() {
     const days =["S", "M", "T", "W", "T", "F", "S"];
@@ -19,7 +20,6 @@ export default function Calender() {
     const [today, setToday] = useState(currentDate);
     const [selectDate, setSelectDate] = useState(currentDate);
 	const router = useRouter();
-	const initialRender = useRef(true);
 	
 	const handleDateSelect = (date: dayjs.Dayjs) => {
 		setSelectDate(date);
@@ -46,7 +46,6 @@ export default function Calender() {
 				selectDateComponents.month === todayComponents.month &&
 				selectDateComponents.year === todayComponents.year
 			) {
-				console.log("present");
 				create();
 			} else if (selectDate > today) {
 				console.log("No Record");
@@ -66,7 +65,7 @@ export default function Calender() {
 			const year = selectedDate.year();
 			const month = String(selectedDate.month() + 1).padStart(2, '0');
 			const day = String(selectedDate.date()).padStart(2, '0');
-			const dateString = `${year}-${month}-${day}`;
+			const dateString = `${day}-${month}-${year}`;
 	
 			const journalCollectionRef = collection(db, "journals", journalInfo?.uid ? journalInfo?.uid : "unknown", "journal");
 		
@@ -95,9 +94,7 @@ export default function Calender() {
 		const year = today.year();
 		const month = String(today.month() + 1).padStart(2, '0');
 		const day = String(today.date()).padStart(2, '0');
-		const dateString = `${year}-${month}-${day}`;
-	
-		const selectDateAsDate = selectDate.toDate();
+		const dateString = `${day}-${month}-${year}`;
 	
 		const todayDocRef = doc(journalCollectionRef, dateString);
 		
@@ -110,37 +107,36 @@ export default function Calender() {
 					content1: "",
 					content2: "",
 					cover: "",
-					date: selectDateAsDate,
+					entrydate: dateString,
 				});
-				router.push(`/home/${dateString}`);
 			}
 		} catch (error) {
 			console.error("Error creating or navigating to document:", error);
 		}
+		const navigatekrlo = (dateString: string) => {
+			 router.push(`/home/${dateString}`);
+		}
 	}
+
 	const OpenToday = async () => {
 		if(journalInfo?.uid) {
 			const journalCollectionRef = collection(db, "journals", journalInfo?.uid ? journalInfo?.uid : "unknown", "journal");
 			const year = today.year();
 			const month = String(today.month() + 1).padStart(2, '0');
 			const day = String(today.date()).padStart(2, '0');
-			const dateString = `${year}-${month}-${day}`;
-		
-			const selectDateAsDate = selectDate.toDate();
-		
+			const dateString = `${day}-${month}-${year}`;
 			const todayDocRef = doc(journalCollectionRef, dateString);
 			
 			try {
 				const docSnap = await getDoc(todayDocRef);
 				if (docSnap.exists()) {
-					console.log("it already exists");
 					router.push(`/home/${dateString}`);
 				} else {
 					await setDoc(todayDocRef, {
 						content1: "",
 						content2: "",
 						cover: "",
-						date: selectDateAsDate,
+						entrydate: dateString,
 					});
 					router.push(`/home/${dateString}`);
 				}
@@ -151,7 +147,6 @@ export default function Calender() {
 			return
 		}
 	}
-	
 
     return (
 		<div className="flex gap-11 sm:divide-x justify-center sm:w-1 mx-auto  items-center sm:flex-row flex-col">
@@ -230,16 +225,6 @@ export default function Calender() {
 							);
 						}
 					)}
-									<div
-										role="button"
-										onClick={ () => {
-											console.log("checking");
-											console.log(selectDate);
-											console.log(today);
-										} }
-									>
-										Check
-									</div>
 				</div>
             </div>
         </div>

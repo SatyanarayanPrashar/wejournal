@@ -39,8 +39,8 @@ const HomePage = () => {
         const journalDocRef = doc(journalCollectionRef, code);
         await setDoc(journalDocRef, {
             uid: code,
-            userid1: user?.uid,
-            userid2: "",
+            mUser: user?.uid,
+            sUser: "null",
             cover: "",
             about: ""
         });
@@ -63,7 +63,7 @@ const HomePage = () => {
         const journalCollectionRef = collection(db, "journals");
         const journalDocRef = doc(journalCollectionRef, code);
         await updateDoc(journalDocRef, {
-            userid2: user?.uid,
+            sUser: user?.uid,
         });
         const usersCollectionRef = collection(db, "users");
         const userDocRef = doc(usersCollectionRef, user?.uid);

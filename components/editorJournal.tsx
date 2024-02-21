@@ -9,13 +9,14 @@ import { Button } from './ui/button';
 import { Check } from 'lucide-react';
 
 interface EditorProps {
-  onChange: (value: string) => void;
+  userRole?: string;
   initialContent?: string;
   editable?: boolean;
   journalUid?: string;
+  dateString?: string;
 };
 
-const EditorJournal: React.FC<EditorProps> = ({ onChange, initialContent, editable, journalUid }: EditorProps) => {
+const EditorJournal: React.FC<EditorProps> = ({ userRole, initialContent, editable, journalUid, dateString }: EditorProps) => {
   const { edgestore } = useEdgeStore();
   const [updatedContent, setUpdatedContent] = useState(initialContent);
 
@@ -59,7 +60,7 @@ const EditorJournal: React.FC<EditorProps> = ({ onChange, initialContent, editab
 
   return (
     <div className='z-[999999]'>
-      <BlockNoteView className='z-[999999]'
+      <BlockNoteView
         editor={editor}
         theme="light"
       />

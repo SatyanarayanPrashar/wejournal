@@ -58,7 +58,7 @@ const Editor: React.FC<EditorProps> = ({ initialContent, editable, journalUid }:
   })
 
   return (
-    <div>
+    <div className='z-[999999]'>
       <BlockNoteView
         editor={editor}
         theme="light"
