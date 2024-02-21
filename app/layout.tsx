@@ -2,6 +2,8 @@ import { Inter } from 'next/font/google'
 import type { Metadata } from 'next'
 import { EdgeStoreProvider } from "@/lib/edgestore";
 import { ModalProvider } from '@/providers/modal-provider';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"
 
 import './globals.css'
 
@@ -35,8 +37,18 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <EdgeStoreProvider>
-              {children}
-              <ModalProvider />
+          <ToastContainer
+            position="bottom-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            draggable={false}
+            closeOnClick
+            pauseOnHover
+            theme="dark"
+          />
+          {children}
+          <ModalProvider />
         </EdgeStoreProvider>
       </body>
     </html>

@@ -7,6 +7,7 @@ import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import { cn } from "@/lib/utils";
 
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 import { db } from "@/app/firebase/config";
 import { collection, doc, getDoc, setDoc } from "firebase/firestore";
@@ -48,8 +49,8 @@ export default function Calender() {
 				create();
 			} else if (selectDate > today) {
 				console.log("No Record");
+				toast.info("One day we will :)");
 			} else {
-				console.log("past");
 				check(selectDate);
 			}
 		} else{
@@ -78,10 +79,10 @@ export default function Calender() {
 				if (docSnap.exists()) {
 					router.push(`/home/${dateString}`);
 				} else {
-					console.log("No record found");
+					toast.error("We were not here :(");
 				}
 			} catch (error) {
-				console.error("Error checking document:", error);
+				toast.error("Error checking document:");
 			}
 		} else{
 			return
@@ -100,7 +101,7 @@ export default function Calender() {
 		try {
 			const docSnap = await getDoc(todayDocRef);
 			if (docSnap.exists()) {
-				console.log("it already exists");
+				router.push(`/home/${dateString}`);
 			} else {
 				await setDoc(todayDocRef, {
 					content1: "",
@@ -110,7 +111,7 @@ export default function Calender() {
 				router.push(`/home/${dateString}`);
 			}
 		} catch (error) {
-			console.error("Error creating or navigating to document:", error);
+			toast.error("An error occured");
 		}
 	}
 
@@ -136,7 +137,7 @@ export default function Calender() {
 					router.push(`/home/${dateString}`);
 				}
 			} catch (error) {
-				console.error("Error creating or navigating to document:", error);
+				toast.error("An error occured");
 			}
 		} else{
 			return
@@ -154,7 +155,7 @@ export default function Calender() {
 							setToday(today.month(today.month() - 1));
 						}}
 					/>
-                    <h1 className="select-none font-semibold ml-[-20px]">
+                    <h1 className="select-none ml-[-20px]">
 						{months[today.month()].substring(0, 3)}, {today.year()}
                     </h1>
 					<GrFormNext
@@ -164,11 +165,10 @@ export default function Calender() {
 							setToday(today.month(today.month() + 1));
 						}}
 					/>
-                    <div className="flex  items-center">
+                    <div className="flex items-center">
                         <h1
-							className="cursor-pointer hover:scale-105 transition-all"
+							className="cursor-pointer hover:scale-105 transition-all font-semibold"
 							onClick={() => {
-								console.log("trigger2");
 								setToday(currentDate);
 								OpenToday();
 							}}
@@ -210,7 +210,6 @@ export default function Calender() {
 											"h-10 w-10 rounded-full grid place-content-center hover:bg-black hover:text-white transition-all cursor-pointer select-none"
 										)}
 										onClick={ () => {
-											console.log("clicked");
 											handleDateSelect(date);
 										}}										
 									>

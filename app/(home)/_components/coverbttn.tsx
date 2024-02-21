@@ -1,7 +1,7 @@
-import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
+
 import useJournalInfo from "@/hooks/active-journal-info";
 import { Button } from "@/components/ui/button";
-import { Check, Image } from "lucide-react";
+import { Image } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export const coverBttn = () => {
