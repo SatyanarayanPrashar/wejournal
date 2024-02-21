@@ -43,7 +43,7 @@ export const Navbar = () => {
                     </div>
                     <div className="rounded-md bg-secondary p-1"> 
                         <Avatar className="h-8 w-8">
-                            <AvatarImage src={user?.photoURL} />
+                            <AvatarImage src={user?.photoURL ? user.photoURL : "/reading.png"} />
                         </Avatar>
                     </div>
                 </>
