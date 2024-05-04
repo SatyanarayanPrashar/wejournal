@@ -21,6 +21,8 @@ const useJournalInfo = () => {
     const [user] = useAuthState(auth);
 
     useEffect(() => {
+        console.log("trigger active journal hook");
+
         const fetchJournalInfo = async (journalId: string) => {
             try {
                 const db = getFirestore();

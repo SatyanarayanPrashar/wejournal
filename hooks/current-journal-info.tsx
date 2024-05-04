@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { getFirestore, doc, getDoc, DocumentData } from 'firebase/firestore';
+import { getFirestore, doc, getDoc } from 'firebase/firestore';
 import useJournalInfo from "@/hooks/active-journal-info";
 import { auth } from "@/providers/auth-provider";
 
@@ -18,6 +18,8 @@ const useCurrentOpenJournal = (dateString: string) => {
     const { journalInfo } = useJournalInfo();
 
     useEffect(() => {
+        console.log("trigger current journal hook");
+
         const fetchCurrentJournal = async () => {
             setIsLoading(true);
             try {

@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { ChevronsLeft, MenuIcon  } from "lucide-react"
-import { useParams, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { ElementRef, useEffect, useRef, useState } from "react";
 
 import { useMediaQuery } from "usehooks-ts";
@@ -14,7 +14,6 @@ import Calender from "./calender";
 import CoverBttn from "./coverbttn";
 
 export const Navigation = () => {
-    const params = useParams();
     const pathname = usePathname();
     const isMobile = useMediaQuery("(max-width: 768px)");
 

@@ -48,7 +48,6 @@ export default function Calender() {
 			) {
 				create();
 			} else if (selectDate > today) {
-				console.log("No Record");
 				toast.info("One day we will :)");
 			} else {
 				check(selectDate);
