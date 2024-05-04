@@ -12,7 +12,7 @@ export const Logo = () => {
   return (
     <div className="hidden md:flex items-center gap-x-2">
       <Image
-        src="/logo.svg"
+        src="/logo-dark.svg"
         height="40"
         width="40"
         alt="Logo"
@@ -25,7 +25,7 @@ export const Logo = () => {
         alt="Logo"
         className="hidden dark:block"
       />
-      <p className={cn("font-semibold", font.className)}>
+      <p className={cn("font-semibold text-[white]", font.className)}>
         WeJournal
       </p>
     </div>

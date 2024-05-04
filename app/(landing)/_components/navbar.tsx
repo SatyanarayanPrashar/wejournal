@@ -25,7 +25,7 @@ export const Navbar = () => {
 
     return (
         <div className={cn(
-            "z-50 bg-background dark:bg-[#1F1F1F] fixed top-0 flex items-center w-full p-6",
+            "z-50 bg-transparent fixed top-0 flex items-center w-full p-6",
             scrolled && "border-b shadow-sm"
         )}>
             <Logo />
@@ -38,7 +38,7 @@ export const Navbar = () => {
             )}
             {user && (
                 <>
-                    <div className="mr-7" role="button" onClick={ ()=>auth.signOut() }>
+                    <div className="mr-7 font-medium text-[white]" role="button" onClick={ ()=>auth.signOut() }>
                         SignOut
                     </div>
                     <div className="rounded-md bg-secondary p-1"> 
