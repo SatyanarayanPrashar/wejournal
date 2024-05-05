@@ -10,9 +10,10 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useEffect } from "react";
 
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { useMediaQuery } from "usehooks-ts";
 
 export const Navbar = () => {
-    const scrolled = useScrollTop();
+    const isMobile = useMediaQuery("(max-width: 768px)");
 
     const [ user, setUser ] = useAuthState(auth);
     const googleAuth = new GoogleAuthProvider();
@@ -24,7 +25,10 @@ export const Navbar = () => {
     }, [user])
 
     return (
-        <div className= "z-50 bg-transparent fixed top-0 flex items-center w-full p-6">
+        <div className={cn(
+            "z-50 bg-transparent fixed top-0 flex items-center w-full p-6"
+            // isMobile && "w-auto"
+        )}>
             <Logo />
             <div className="md:ml-auto md:justify-end justify-between w-full flex items-center gap-x-2">        
             </div>

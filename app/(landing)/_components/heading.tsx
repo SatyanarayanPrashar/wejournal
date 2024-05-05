@@ -35,7 +35,7 @@ export const Heading = () => {
                     transition={{ ease: "linear", duration: 1 }}
                     viewport={{ margin: "-200px" }}
                     >
-                        <div className="h-full w-[100vh]">
+                        <div className="h-full w-full">
                             <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold">
                                 Connect Your Stories.
                             </h1>
